@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get '/cart', to: 'carts#show'
   put '/cart/add_item', to: 'carts#update_item'
   delete '/cart/:product_id', to: 'carts#remove_item'
+  delete '/cart', to: 'carts#clear'
+
 
   root "rails/health#show"
 end

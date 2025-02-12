@@ -22,6 +22,12 @@ class CartsController < ApplicationController
     render json: { id: session[:cart_id], products: cart.values, total_price: calculate_total_price(cart) }, status: :ok
   end
 
+  def clear
+    cart = @cart_service.clear_cart
+    session.delete(:cart_id)
+    render json: { id: session[:cart_id], products: cart.values, total_price: 0 }, status: :ok
+  end
+
   private
 
   def initialize_cart_service

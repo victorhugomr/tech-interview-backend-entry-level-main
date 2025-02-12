@@ -42,6 +42,11 @@ class CartService
       cart = @redis.get("cart:#{@session_id}")
       cart ? JSON.parse(cart) : {}
     end
+
+    def clear_cart
+      @redis.del("cart:#{@session_id}", "cart:#{@session_id}:updated_at")
+      {}
+    end
   
     private
   
