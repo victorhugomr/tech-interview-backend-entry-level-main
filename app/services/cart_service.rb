@@ -6,13 +6,14 @@ class CartService
   
     def add_product(product_id, quantity)
       product = Product.find_by(id: product_id)
-      raise ActiveRecord::RecordNotFound, "Product not found" unless product
+      raise ActiveRecord::RecordNotFound, "Produto não encontrado." unless product
       
       cart = fetch_cart
       if cart[product_id.to_s]
         cart[product_id.to_s]['quantity'] += quantity
+        cart[product_id.to_s]['total_price'] = cart[product_id.to_s]['quantity'] * product.price
       else
-        cart[product_id.to_s] = { 'id' => product.id, 'name' => product.name, 'quantity' => quantity, 'unit_price' => product.price }
+        cart[product_id.to_s] = { 'id' => product.id, 'name' => product.name, 'quantity' => quantity, 'unit_price' => product.price, 'total_price' => product.price }
       end
       save_cart(cart)
       cart
@@ -29,6 +30,9 @@ class CartService
   
     def remove_product(product_id)
       cart = fetch_cart
+      unless cart[product_id.to_s]
+        raise ActiveRecord::RecordNotFound, "Produto não encontrado no carrinho."
+      end
       cart.delete(product_id.to_s)
       save_cart(cart)
       cart
@@ -43,5 +47,6 @@ class CartService
   
     def save_cart(cart)
       @redis.set("cart:#{@session_id}", cart.to_json)
+      @redis.set("cart:#{@session_id}:updated_at", Time.now.to_i)
     end
   end
