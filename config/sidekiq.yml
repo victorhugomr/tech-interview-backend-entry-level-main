@@ -1,0 +1,7 @@
+:concurrency: 3
+:queues:
+  - default
+:schedule:
+  mark_cart_as_abandoned:
+    cron: "0 * * * *"
+    class: MarkCartAsAbandonedJob
