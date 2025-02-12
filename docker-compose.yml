@@ -39,7 +39,7 @@ services:
             - redis
     test:
         build: .
-        command: bundle exec rspec
+        command: bash -c "bin/rails db:create && bin/rails db:migrate RAILS_ENV=test"
         volumes:
             - .:/rails
         depends_on:
